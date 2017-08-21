@@ -22,6 +22,7 @@
     <ProjectGuid>{40D01A07-B591-44D8-B9ED-E3A15C476600}</ProjectGuid>
     <RootNamespace>ClaseseInstancias</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>GrafCompt 2017.2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
