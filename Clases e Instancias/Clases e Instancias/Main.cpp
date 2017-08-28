@@ -24,17 +24,31 @@ void Initialize() {
 	positions.push_back(glm::vec2(-0.5f, 0.5f));
 	positions.push_back(glm::vec2(-0.5f, -0.5f));
 
+	std::vector <glm::vec3> colors;
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+
 	glGenVertexArrays(1, &vao); //Queremos generar 1 manager
 	glBindVertexArray(vao); //Utilizar el vao. A partir de este momento, todos los VBO's creados y configurados se van a asociar a este manager
 
 	GLuint positionsVBO; //Indentificador del Vertex Buffer Object de posiciones.
 	glGenBuffers(1, &positionsVBO); //Creación del VBO de posiciones
 	glBindBuffer(GL_ARRAY_BUFFER, positionsVBO); //Activamos el buffer para poder utilizarlo
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*positions.size(), 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*positions.size(),
 		positions.data(), GL_STATIC_DRAW); //Creamos la memoria y la inicializamos con los datos del atributo de posiciones
 	glEnableVertexAttribArray(0); //Activamos el atributo en la tarjeta de video
-	glVertexAttribPointer(0,2,GL_FLOAT, GL_FALSE, 0, nullptr); //Configuramos los datos del atributo en la tarjeta de video
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr); //Configuramos los datos del atributo en la tarjeta de video
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //Ya no vamos a utilizar este VBO en éste momento.
+
+	GLuint colorsVBO;
+	glGenBuffers(1, &colorsVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*colors.size(), colors.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0); //Desactivamos el manager
 }
