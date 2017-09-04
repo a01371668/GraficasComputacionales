@@ -22,10 +22,9 @@ void Initialize() {
 	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 	float grad = .0f;
 
-	while (grad < 361) {
-		positions.push_back(glm::vec2(glm::cos(glm::radians(grad)), glm::sin(glm::radians(grad))));
+	for (grad; grad < 361.0f; grad += 1.0f) {
+		positions.push_back(glm::vec2(glm::cos(glm::radians(grad)),glm::sin(glm::radians(grad))));
 		colors.push_back(glm::vec3(glm::cos(glm::radians(grad)), glm::sin(glm::radians(grad)), 0.1f));
-		grad++;
 	}
 
 	/*//Creando toda la memoria que el programa va a utilizar.
