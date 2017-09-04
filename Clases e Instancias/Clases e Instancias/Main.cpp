@@ -1,9 +1,7 @@
-/*
 #include <iostream>
 #include "Circle.h"
 #include "Rectangle.h"
 #include "Employee.h"
-*/
 
 #include <GL/glew.h> //Se va a la carpeta de video, evalua la tarjea de video y obtiene todo el API más reciente de openGL
 #include <GL/freeglut.h> //Se ocupa de manejar ventanas (openGL no maneja ventanas)
@@ -16,9 +14,21 @@
 GLuint vao; //Identificador del manager al que vamos a asociar todos los VBO's
 GLuint shaderProgram; //Identificador del manager de los shaders (shaderProgram)
 
-
 void Initialize() {
-	//Creando toda la memoria que el programa va a utilizar.
+	std::vector<glm::vec2> positions;
+	std::vector<glm::vec3> colors;
+	
+	positions.push_back(glm::vec2(0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+	float grad = .0f;
+
+	while (grad < 361) {
+		positions.push_back(glm::vec2(glm::cos(glm::radians(grad)), glm::sin(glm::radians(grad))));
+		colors.push_back(glm::vec3(glm::cos(glm::radians(grad)), glm::sin(glm::radians(grad)), 0.1f));
+		grad++;
+	}
+
+	/*//Creando toda la memoria que el programa va a utilizar.
 	std::vector <glm::vec2> positions; //almacenar atributo de posiciones de los vértices (es una lista de vec2); std::vector(lista ligada)
 	//Esto es en CPU y RAM
 	positions.push_back(glm::vec2(0.5f, 0.5f));
@@ -28,10 +38,10 @@ void Initialize() {
 
 	std::vector <glm::vec3> colors;
 	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
-
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));*/
+	
 	glGenVertexArrays(1, &vao); //Queremos generar 1 manager
 	glBindVertexArray(vao); //Utilizar el vao. A partir de este momento, todos los VBO's creados y configurados se van a asociar a este manager
 
@@ -73,6 +83,7 @@ void Initialize() {
 	const GLchar *fragmentSource_c = (const GLchar*)fragmentSource.c_str();
 	glShaderSource(fragmentShaderHandle, 1, &fragmentSource_c, nullptr);
 	glCompileShader(fragmentShaderHandle);
+	
 
 	shaderProgram = glCreateProgram(); //Creamos identificador para el manager de los shaders
 	glAttachShader(shaderProgram, vertexShaderHandle); //Adjuntamos el vertexShader al manager (van a trabajar juntos)
@@ -87,7 +98,7 @@ void GameLoop() {
 	
 	glUseProgram(shaderProgram); //Activamos el vertex shader y fragment shader utilizando el manager.
 	glBindVertexArray(vao); //Activamos el manager, en este momento se activan todos los VBO's asociados automáticamente.
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); //Funcion de dibujado sin indices
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 362); //Funcion de dibujado sin indices
 	glBindVertexArray(0); //Terminamos de utilizar el manager
 	glUseProgram(0); //Desactivamos el manager
 	
@@ -117,7 +128,7 @@ int main(int argc, char* argv[]) {
 	glutInitWindowSize(400, 400);
 
 	//Creamos la ventana y le damos un título.
-	glutCreateWindow("Hello Wordl GL");
+	glutCreateWindow("Examen Primer Parcial -  A01371668");
 	
 	//Asociamos una función de render. Ésta función se mandará a llamar para dibujar un frame
 	glutDisplayFunc(GameLoop);
@@ -136,10 +147,10 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 
-	/*
-	//Crear objeto circle
+	
+	/*Crear objeto circle
 	std::cout << "Circulo" << std::endl;
-	Circle circulo(2.0,"green");
+	Circle circulo(1.0,"green");
 	std::cout << circulo.GetRadius() << std::endl;
 
 	//Crear objeto rectangle
