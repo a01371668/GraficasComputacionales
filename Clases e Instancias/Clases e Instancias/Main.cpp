@@ -13,6 +13,9 @@
 
 GLuint vao; //Identificador del manager al que vamos a asociar todos los VBO's
 GLuint shaderProgram; //Identificador del manager de los shaders (shaderProgram)
+float vertsPerFrame = 0.0f;
+float delta = 0.05f;
+
 
 void Initialize() {
 	std::vector<glm::vec2> positions;
@@ -67,7 +70,7 @@ void Initialize() {
 	InputFile ifile;
 
 	//Cargamos VERTEX SHADER
-	ifile.Read("Default.vert");	//Leemos archivo default.vert donde está el código del vertex shader
+	ifile.Read("DiscardCenter.vert");	//Leemos archivo default.vert donde está el código del vertex shader
 	std::string vertexSource = ifile.GetContents(); //Obtenemos codigo fuente y lo guardamos en un string
 	GLuint vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER); //Creamos un shader de tipo vertex y guardamos su identificador en una variable.
 
@@ -76,7 +79,7 @@ void Initialize() {
 	glShaderSource(vertexShaderHandle, 1, &vertexSource_c, nullptr); //Le estamos dando el codigo fuente a OpenGL para que se lo asigne al shader
 	glCompileShader(vertexShaderHandle); //Compilamos el shader en busca de errores. Se asume que no hay error en la compilación
 
-	ifile.Read("Default.frag");
+	ifile.Read("DiscardCenter.frag");
 	std::string fragmentSource = ifile.GetContents();
 	GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
 	const GLchar *fragmentSource_c = (const GLchar*)fragmentSource.c_str();
@@ -90,6 +93,11 @@ void Initialize() {
 	glBindAttribLocation(shaderProgram, 0, "VertexPosition"); //Agregamos un buffer con indice 0(posiciones) a la variable VertexPosition
 	glBindAttribLocation(shaderProgram, 1, "VertexColor"); //Agregamos un buffer con indice 1(colores) a la variable VertexColor
 	glLinkProgram(shaderProgram); //Ejecutamos el proceso de linker(asegurarnos que el vertex y fragment son compatibles)
+
+	glUseProgram(shaderProgram); //Para configurar un uniform debes decirle a OpenGL que vamos a utilizar el shaderProgram(manager)
+	GLint uniformLocation = glGetUniformLocation(shaderProgram, "Resolution");
+	glUniform2f(uniformLocation, 400.0f, 400.0f);
+	glUseProgram(0);
 }
 
 void GameLoop() {
@@ -97,11 +105,28 @@ void GameLoop() {
 	
 	glUseProgram(shaderProgram); //Activamos el vertex shader y fragment shader utilizando el manager.
 	glBindVertexArray(vao); //Activamos el manager, en este momento se activan todos los VBO's asociados automáticamente.
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 362); //Funcion de dibujado sin indices
+	glDrawArrays(GL_TRIANGLE_FAN, 0, glm::clamp(vertsPerFrame,0.0f,362.0f)); //Funcion de dibujado sin indices
 	glBindVertexArray(0); //Terminamos de utilizar el manager
 	glUseProgram(0); //Desactivamos el manager
 	
+	vertsPerFrame += delta;
+	if (vertsPerFrame < 0.0f || vertsPerFrame >= 370.0f) {
+		delta *= -1.0f;
+	}
+
 	glutSwapBuffers();
+}
+
+void Idle() {
+	glutPostRedisplay(); //Cuando OpenGL entra a modo de reposo (para guardar bateria, por ejemp) le decimos que vuelva a dibujar -> vuelve a mandar a llamar GameLoop
+}
+
+void ReshapeWindow(int width, int height) {
+	glViewport(0, 0, width, height);
+	glUseProgram(shaderProgram); //Para configurar un uniform debes decirle a OpenGL que vamos a utilizar el shaderProgram(manager)
+	GLint uniformLocation = glGetUniformLocation(shaderProgram, "Resolution");
+	glUniform2f(uniformLocation, width, height);
+	glUseProgram(0);
 }
 
 int main(int argc, char* argv[]) {
@@ -127,16 +152,20 @@ int main(int argc, char* argv[]) {
 	glutInitWindowSize(400, 400);
 
 	//Creamos la ventana y le damos un título.
-	glutCreateWindow("Examen Primer Parcial -  A01371668");
+	glutCreateWindow("Hello World");
 	
 	//Asociamos una función de render. Ésta función se mandará a llamar para dibujar un frame
 	glutDisplayFunc(GameLoop);
+	//Asociamos una función para el camnbio de resolución de la ventana. Freeglut la va a mandar llamar cuando alguien cambie el tamaño de la ventana.
+	glutReshapeFunc(ReshapeWindow);
+	//Asociamos una función para llamar cuando OpenGL entre en modo de reposo.
+	glutIdleFunc(Idle);
 
 	//Inicializar GLEW. Esta libreria se encarga de obtener el API de OpenGL de nuestra tarjeta de video.
 	glewInit();
 
 	//Configuracion de OpenGL. Este es el color por default del buffer de color en el framebuffer.
-	glClearColor(1.0f, 1.0f, 0.5f, 1.0f);
+	glClearColor(1.0f, 1.0f, 0.5f, 0.5f);
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	Initialize(); //Configuración inicial de nuestro programa.
