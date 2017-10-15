@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include "Transform.h"
 
-
 class Camera {
 public:
 	Camera();

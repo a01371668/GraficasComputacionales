@@ -19,6 +19,8 @@ private:
 	GLuint _colorsVertexBufferObject;
 	GLint _vertexCount;
 	void SetAttributeData(GLuint& buffer, const GLsizeiptr size, const void* data, GLenum usage, GLuint locationIndex, const GLint components);
+	GLuint _indiceBufferObject;
+	GLuint _indiceContador;
 
 public:
 	Mesh();
@@ -29,4 +31,5 @@ public:
 	void SetPositionAttribute(vector<vec3> positions, GLenum usage, GLuint locationIndex);
 	void SetColorAttribute(vector<vec3> colors, GLenum usage, GLuint locationIndex);
 	void SetColorAttribute(vector<vec4> colors, GLenum usage, GLuint locationIndex);
+	void SetIndice(std::vector<unsigned int> indices, GLenum usage);
 };

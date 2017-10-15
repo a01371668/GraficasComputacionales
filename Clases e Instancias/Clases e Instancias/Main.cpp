@@ -28,66 +28,78 @@ void Initialize()
 	// Creación del atributo de posiciones de los vértices.
 	// Lista de vec2
 	// Claramente en el CPU y RAM
-	std::vector<glm::vec2> positions;
-	positions.push_back(glm::vec2(
-		glm::cos(glm::radians(90.0f)),
-		glm::sin(glm::radians(90.0f))));
-	positions.push_back(glm::vec2(
-		0.5f * glm::cos(glm::radians(18.0f)),
-		0.5f * glm::sin(glm::radians(18.0f))));
-	positions.push_back(glm::vec2(
-		glm::cos(glm::radians(18.0f)),
-		glm::sin(glm::radians(18.0f))));
-	positions.push_back(glm::vec2(
-		0.5f * glm::cos(glm::radians(306.0f)),
-		0.5f * glm::sin(glm::radians(306.0f))));
-	positions.push_back(glm::vec2(
-		glm::cos(glm::radians(306.0f)),
-		glm::sin(glm::radians(306.0f))));
-	positions.push_back(glm::vec2(
-		0.5f * glm::cos(glm::radians(234.0f)),
-		0.5f * glm::sin(glm::radians(234.0f))));
-	positions.push_back(glm::vec2(
-		glm::cos(glm::radians(234.0f)),
-		glm::sin(glm::radians(234.0f))));
-	positions.push_back(glm::vec2(
-		0.5f * glm::cos(glm::radians(162.0f)),
-		0.5f * glm::sin(glm::radians(162.0f))));
-	positions.push_back(glm::vec2(
-		glm::cos(glm::radians(162.0f)),
-		glm::sin(glm::radians(162.0f))));
-	positions.push_back(glm::vec2(
-		0.5f * glm::cos(glm::radians(90.0f)),
-		0.5f * glm::sin(glm::radians(90.0f))));
-	positions.push_back(glm::vec2(
-		glm::cos(glm::radians(90.0f)),
-		glm::sin(glm::radians(90.0f))));
-	positions.push_back(glm::vec2(
-		0.5f * glm::cos(glm::radians(18.0f)),
-		0.5f * glm::sin(glm::radians(18.0f))));
+	std::vector<glm::vec3> positions;
+	positions.push_back(glm::vec3(3.0f, 0, 3.0f));
+	positions.push_back(glm::vec3(3.0f, 0, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 6.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 6.0f, 3.0f));
 
+	positions.push_back(glm::vec3(-3.0f, 0, 3.0f));
+	positions.push_back(glm::vec3(3.0f, 0, 3.0f));
+	positions.push_back(glm::vec3(3.0f, 6.0f, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, 6.0f, 3.0f)); 
 
+	positions.push_back(glm::vec3(-3.0f, 0, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, 0, 3.0f)); 
+	positions.push_back(glm::vec3(-3.0f, 6.0f, 3.0f)); 
+	positions.push_back(glm::vec3(-3.0f, 6.0f, -3.0f));
+
+	positions.push_back(glm::vec3(3.0f, 0, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, 0, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, 6.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 6.0f, -3.0f)); 
+
+	positions.push_back(glm::vec3(3.0f, 0, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, 0, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, 0, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 0, -3.0f)); 
+												
+	positions.push_back(glm::vec3(3.0f, 6.0f, 3.0f)); 
+	positions.push_back(glm::vec3(-3.0f, 6.0f, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, 6.0f, 3.0f)); 
+	positions.push_back(glm::vec3(3.0f, 6.0f, -3.0f)); 
 
 
 	// Arreglo de colores en el cpu
 	std::vector<glm::vec3> colors;
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	
 	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	
+	colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
+	colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
+	colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
+	colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
+	
+	colors.push_back(glm::vec3(0.5f, 1.0f, 1.0f));
+	colors.push_back(glm::vec3(1.0f, 0.5f, 1.0f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 0.5f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
 
+	std::vector<unsigned int> indices = {
+		0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 23, 21
+	};
 
-	_mesh.CreateMesh(12);
+	_mesh.CreateMesh(positions.size());
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
 	_mesh.SetColorAttribute(colors, GL_STATIC_DRAW, 1);
+	_mesh.SetIndice(indices, GL_STATIC_DRAW);
 
 	_shaderProgram.CreateProgram();
 	_shaderProgram.AttachShader("Default.vert", GL_VERTEX_SHADER);
@@ -96,8 +108,8 @@ void Initialize()
 	_shaderProgram.SetAttribute(1, "VertexColor");
 	_shaderProgram.LinkProgram();
 
-	_transform.SetRotation(0.0f, 0.0f, 90.0f); //inclinación de la figura
-	_camera.SetOrthographic(1.0f, 1.0f);
+	//_transform.SetRotation(0.0f, 0.0f, 90.0f); //inclinación de la figura
+	_camera.SetPosition(0.0f, 0.0f, 15.0f);
 }
 
 void GameLoop()
@@ -106,13 +118,11 @@ void GameLoop()
 	// Siempre hacerlo al inicio del frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_camera.MoveForward(0.0001f);
-
-	_transform.Rotate(0.0f, 0.01f, 0.0f, true);
+	_transform.Rotate(0.02f, 0.02f, 0.02f, false);
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
-	_mesh.Draw(GL_TRIANGLE_STRIP);
+	_mesh.Draw(GL_TRIANGLES);
 	_shaderProgram.Deactivate();
 
 	// Cuando terminamos de renderear, cambiamos los buffers.
