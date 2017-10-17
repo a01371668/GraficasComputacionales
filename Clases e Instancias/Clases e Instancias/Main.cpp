@@ -21,6 +21,11 @@ ShaderProgram _shaderProgram;
 Transform _transform;
 Camera _camera;
 
+Transform _transformDos;
+Transform _transformTres;
+Transform _transformCuatro;
+Transform _transformCinco;
+
 void Initialize()
 {
 	// Creando toda la memoria que el programa va a utilizar.
@@ -108,8 +113,21 @@ void Initialize()
 	_shaderProgram.SetAttribute(1, "VertexColor");
 	_shaderProgram.LinkProgram();
 
-	//_transform.SetRotation(0.0f, 0.0f, 90.0f); //inclinación de la figura
-	_camera.SetPosition(0.0f, 0.0f, 15.0f);
+	//_transform.SetRotation(0.0f, 0.0f, 45.0f); //inclinación de la figura
+	//_camera.SetOrthographic(5.0f,2.0f);
+
+	_transform.SetRotation(0.0f, 180.0f, 0.0f);
+	_transformDos.SetPosition(0.0f, 6.0f, 0.0f);
+	_transformDos.SetRotation(0.0f, 0.0f, 0.0f);
+	_transformTres.SetPosition(8.0f, -10.0f, 0.0f);
+	_transformTres.SetRotation(0.0f, 0.0f, 0.0f);
+	_transformTres.SetScale(30.0f, 0.5f, 30.0f);
+	_transformCuatro.SetPosition(-5.0f, 0.0f, 40.0f);
+	_transformCinco.SetPosition(20.0f, 0.0f, 0.0f);
+
+	_camera.SetPosition(0.0f, 0.0f, 65.0f);
+	_camera.MoveUp(12.0f);
+
 }
 
 void GameLoop()
@@ -118,10 +136,26 @@ void GameLoop()
 	// Siempre hacerlo al inicio del frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_transform.Rotate(0.02f, 0.02f, 0.02f, false);
+	//Giramos cámara
+	_camera.Rotate(0.0f, 0.02f, 0.0f, false);
+	
+	//Giramos cubos que estén sobre la base
+	_transform.Rotate(0.0f, -0.1f, 0.0f, false);
+	_transformDos.Rotate(0.0f, 0.1f, 0.0f, false);
+	_transformCuatro.Rotate(0.0f, 0.1f, 0.0f, false);
+	_transformCinco.Rotate(0.0f, -0.1f, 0.0f, false);
 
+	//Dibujamos los 5 cubos
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
+	_mesh.Draw(GL_TRIANGLES);
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transformDos.GetModelMatrix());
+	_mesh.Draw(GL_TRIANGLES);
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transformTres.GetModelMatrix());
+	_mesh.Draw(GL_TRIANGLES);
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transformCuatro.GetModelMatrix());
+	_mesh.Draw(GL_TRIANGLES);
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transformCinco.GetModelMatrix());
 	_mesh.Draw(GL_TRIANGLES);
 	_shaderProgram.Deactivate();
 
@@ -166,7 +200,7 @@ int main(int argc, char* argv[])
 	// Iniciar las dimensiones de la ventana (en pixeles)
 	glutInitWindowSize(400, 400);
 	// Creamos la ventana y le damos un título.
-	glutCreateWindow("Pentagono A01371668");
+	glutCreateWindow("Move 5 Cubes A01371668");
 	// Asociamos una función de render.
 	//Esta función se mandará a llamar para dibujar un frame.
 	glutDisplayFunc(GameLoop);
@@ -184,7 +218,7 @@ int main(int argc, char* argv[])
 
 	// Configurar OpenGL. Este es el color por default del buffer de color
 	// en el framebuffer.
-	glClearColor(1.0f, 1.0f, 0.5f, 1.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
 	// Ademas de solicitar el buffer de profundidad, tenemos
 	// que decirle a OpenGL que lo queremos activo
 	glEnable(GL_DEPTH_TEST);
