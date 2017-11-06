@@ -1,6 +1,6 @@
 /*
-*	Autor1: Alonso Issac Morales Gutiérrez	A01371668
-*	Autor2: Gabriela Aguilar Lugo			A01373890
+*	Autor1: Francisco Geada		
+*	Autor2: Alonso Morales		A01371668
 *	Gráficas Computacionales
 *	Prof. Oriam De Gyves
 *	Main.cpp
@@ -15,178 +15,240 @@
 #include "ShaderProgram.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "Texture2D.h"
 
 Mesh _mesh;
 ShaderProgram _shaderProgram;
-Camera _camera;
 Transform _transform;
 Transform _transform2;
+Camera _camera;
+Texture2D _texture;
 
-void Initialize()
-{
-	// Creando toda la memoria que el programa va a utilizar.
-	// Creación del atributo de posiciones de los vértices.
-	// Lista de vec2
-	// Claramente en el CPU y RAM
+
+void Initialize() {
 	std::vector<glm::vec3> positions;
-	positions.push_back(glm::vec3(3.0f, 0, 3.0f));  
-	positions.push_back(glm::vec3(3.0f, 0, -3.0f)); 
-	positions.push_back(glm::vec3(3.0f, 6.0f, -3.0f)); 
-	positions.push_back(glm::vec3(3.0f, 6.0f, 3.0f)); 
+	std::vector<glm::vec3> normals;
+	std::vector<unsigned int> indices;
+	std::vector<glm::vec2> texturas;
+	_texture.LoadTexture("red.jpg");
+	_texture.LoadTexture("caja.jpg");
 
-	positions.push_back(glm::vec3(-3.0f, 0, 3.0f));
-	positions.push_back(glm::vec3(3.0f, 0, 3.0f));
-	positions.push_back(glm::vec3(3.0f, 6.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 6.0f, 3.0f));
-		
-	positions.push_back(glm::vec3(-3.0f, 0, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, 0, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 6.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 6.0f, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(glm::vec3(3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
 
-	positions.push_back(glm::vec3(3.0f, 0, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, 0, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, 6.0f, -3.0f));
-	positions.push_back(glm::vec3(3.0f, 6.0f, -3.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	positions.push_back(glm::vec3(3.0f, 0, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 0, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 0, -3.0f));
-	positions.push_back(glm::vec3(3.0f, 0, -3.0f));
+	texturas.push_back(glm::vec2(0.0f, 0.0f));
+	texturas.push_back(glm::vec2(1.0f, 1.0f));
+	texturas.push_back(glm::vec2(0.0f, 1.0f));
+	texturas.push_back(glm::vec2(1.0f, 0.0f));
 
-	positions.push_back(glm::vec3(3.0f, 6.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 6.0f, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, 6.0f, 3.0f));
-	positions.push_back(glm::vec3(3.0f, 6.0f, -3.0f));
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+	indices.push_back(3);
+	indices.push_back(1);
+	indices.push_back(0);
 
-	
-	// Arreglo de colores en el cpu
-	//Paleta de colores http://prideout.net/archive/colors.php#Floats
+	positions.push_back(glm::vec3(-3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, -3.0f, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, 3.0f, -3.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+
+	texturas.push_back(glm::vec2(0.0f, 0.0f));
+	texturas.push_back(glm::vec2(1.0f, 1.0f));
+	texturas.push_back(glm::vec2(0.0f, 1.0f));
+	texturas.push_back(glm::vec2(1.0f, 0.0f));
+
+	indices.push_back(4);
+	indices.push_back(5);
+	indices.push_back(6);
+	indices.push_back(7);
+	indices.push_back(5);
+	indices.push_back(4);
+
+	positions.push_back(glm::vec3(-3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, -3.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
+
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+
+	texturas.push_back(glm::vec2(0.0f, 0.0f));
+	texturas.push_back(glm::vec2(1.0f, 1.0f));
+	texturas.push_back(glm::vec2(0.0f, 1.0f));
+	texturas.push_back(glm::vec2(1.0f, 0.0f));
+
+	indices.push_back(8);
+	indices.push_back(9);
+	indices.push_back(10);
+	indices.push_back(10);
+	indices.push_back(9);
+	indices.push_back(11);
+
+	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
+	positions.push_back(glm::vec3(3.0f, 3.0f, -3.0f));
+
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+
+	texturas.push_back(glm::vec2(0.0f, 0.0f));
+	texturas.push_back(glm::vec2(1.0f, 1.0f));
+	texturas.push_back(glm::vec2(0.0f, 1.0f));
+	texturas.push_back(glm::vec2(1.0f, 0.0f));
+
+	indices.push_back(12);
+	indices.push_back(13);
+	indices.push_back(14);
+	indices.push_back(15);
+	indices.push_back(13);
+	indices.push_back(12);
+
+	positions.push_back(glm::vec3(-3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(-3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, 3.0f, 3.0f));
+
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+
+	texturas.push_back(glm::vec2(0.0f, 0.0f));
+	texturas.push_back(glm::vec2(1.0f, 1.0f));
+	texturas.push_back(glm::vec2(0.0f, 1.0f));
+	texturas.push_back(glm::vec2(1.0f, 0.0f));
+
+	indices.push_back(16);
+	indices.push_back(17);
+	indices.push_back(18);
+	indices.push_back(18);
+	indices.push_back(17);
+	indices.push_back(19);
+
+	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(glm::vec3(-3.0f, -3.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
+	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
+
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+
+	texturas.push_back(glm::vec2(0.0f, 0.0f));
+	texturas.push_back(glm::vec2(1.0f, 1.0f));
+	texturas.push_back(glm::vec2(0.0f, 1.0f));
+	texturas.push_back(glm::vec2(1.0f, 0.0f));
+
+	indices.push_back(20);
+	indices.push_back(21);
+	indices.push_back(22);
+	indices.push_back(22);
+	indices.push_back(23);
+	indices.push_back(20);
 
 	std::vector<glm::vec3> colors;
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+
+	colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+	colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+
 	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
-	colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
-	colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
-	colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	colors.push_back(glm::vec3(0.502f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(0.502f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(0.502f, 0.0f, 0.0f));
-	colors.push_back(glm::vec3(0.502f, 0.0f, 0.0f));
-
-	colors.push_back(glm::vec3(0.482f, 0.408f, 0.933f));
-	colors.push_back(glm::vec3(0.482f, 0.408f, 0.933f));
-	colors.push_back(glm::vec3(0.482f, 0.408f, 0.933f));
-	colors.push_back(glm::vec3(0.482f, 0.408f, 0.933f));
-
-	colors.push_back(glm::vec3(1.0f, 0.843f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.843f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.843f, 0.0f));
-	colors.push_back(glm::vec3(1.0f, 0.843f, 0.0f));
-	
-	std::vector<glm::vec3> normales;
-	
-	normales.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	normales.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	normales.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	normales.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-
-	normales.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	normales.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	normales.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	normales.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-
-	normales.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	normales.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	normales.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	normales.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-
-	normales.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	normales.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	normales.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	normales.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-
-	normales.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-	normales.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-	normales.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-	normales.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-
-	normales.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	normales.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	normales.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	normales.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-
-	std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3, 
-		4, 5, 6, 4, 6, 7, 
-		8, 9, 10, 8, 10, 11, 
-		12, 13, 14, 12, 14, 15, 
-		16, 17, 18, 16, 18, 19, 
-		20, 21, 22, 20, 23, 21 };
-
-	_mesh.CreateMesh(positions.size());
+	_mesh.SetIndices(indices, GL_STATIC_DRAW);
+	_mesh.CreateMesh(24);
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
 	_mesh.SetColorAttribute(colors, GL_STATIC_DRAW, 1);
-	_mesh.SetNormalAttribute(normales, GL_STATIC_DRAW, 2);
-	_mesh.SetIndice(indices, GL_STATIC_DRAW);
+	_mesh.SetIndices(indices, GL_STATIC_DRAW);
+	_mesh.SetNormalAttribute(normals, GL_STATIC_DRAW, 2);
+	_mesh.SetTexCoordAttribute(texturas, GL_STATIC_DRAW, 3);
 
 	_shaderProgram.CreateProgram();
+	_shaderProgram.AttachShader("Default.vert", GL_VERTEX_SHADER);
+	_shaderProgram.AttachShader("Default.frag", GL_FRAGMENT_SHADER);
 	_shaderProgram.SetAttribute(0, "VertexPosition");
 	_shaderProgram.SetAttribute(1, "VertexColor");
 	_shaderProgram.SetAttribute(2, "VertexNormal");
-	_shaderProgram.AttachShader("Light.vert", GL_VERTEX_SHADER);
-	_shaderProgram.AttachShader("Light.frag", GL_FRAGMENT_SHADER);
+	_shaderProgram.SetAttribute(3, "VertexTexCoord");
+
 	_shaderProgram.LinkProgram();
+	_camera.moveForward(25.0f);
+	_transform2.setScale(10, 0.5f, 10);
+	_transform2.moveUp(-10, true);
 
-	_transform.SetPosition(0.0f, 0.0f, 0.0f);
-	_transform.SetScale(0.3f, 0.3f, 0.3f);
-
-	_transform2.SetPosition(0.0f, -2.0f, 0.0f);
-	_transform2.SetScale(8.0f, 0.01f, 8.0f);
-
-	_camera.SetPosition(0.0f,0.0f,10.0f);
 }
 
 void GameLoop()
 {
-	// Limpiamos el buffer de color y el buffer de profunidad.
-	// Siempre hacerlo al inicio del frame
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	_transform.Rotate(0.01f, 0.01f, 0.01f, false);
+
+	_transform.rotate(0.01f, 0.01f, 0.01f, true);
+
 
 	_shaderProgram.Activate();
-	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
-	_shaderProgram.SetUniformVector("LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-	_shaderProgram.SetUniformVector("LightPosition", glm::vec3(0.0f, 0.0f, 5.0f));
-	_shaderProgram.SetUniformVector("CameraPosition", _camera.GetPosition());
+	_shaderProgram.SetUniformf("pluzx", 0);
+	_shaderProgram.SetUniformf("pluzy", 5);
+	_shaderProgram.SetUniformf("pluzz", 0);
+	_shaderProgram.SetUniformf("pcamarax", _camera.getPosition()[0]);
+	_shaderProgram.SetUniformf("pcamaray", _camera.getPosition()[1]);
+	_shaderProgram.SetUniformf("pcamaraz", _camera.getPosition()[2]);
+	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.getViewProjection() * _transform.getModelMatrix());
+	glActiveTexture(GL_TEXTURE0);
+	_texture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
-
-	_shaderProgram.SetUniformMatrix("modelMatrix", _transform2.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.getViewProjection() * _transform2.getModelMatrix());
 	_mesh.Draw(GL_TRIANGLES);
 	_shaderProgram.Deactivate();
-	
-	// Cuando terminamos de renderear, cambiamos los buffers.
+	glActiveTexture(GL_TEXTURE0);
+	_texture.Unbind();
+
 	glutSwapBuffers();
 }
 
 void Idle()
 {
-	// Cuando OpenGL entra en modo de reposo 
-	// (para guardar bateria, por ejemplo)
-	// le decimos que vuelva a dibujar ->
-	// Vuelve a mandar a llamar GameLoop
 	glutPostRedisplay();
 }
 
@@ -202,7 +264,7 @@ int main(int argc, char* argv[])
 	// en donde podemos dibujar
 	glutInit(&argc, argv);
 	// Solicitando una versión específica de OpenGL.
-	glutInitContextVersion(4, 0);
+	//glutInitContextVersion(4, 4);
 	// Iniciar el contexto de OpenGL. El contexto se refiere
 	// a las capacidades que va a tener nuestra aplicación
 	// gráfica.
@@ -216,9 +278,9 @@ int main(int argc, char* argv[])
 	// true color RGBA, un buffer de profundidad y un segundo buffer para renderear.
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 	// Iniciar las dimensiones de la ventana (en pixeles)
-	glutInitWindowSize(400, 400);
+	glutInitWindowSize(600, 600);
 	// Creamos la ventana y le damos un título.
-	glutCreateWindow("Proyecto Final pt1: Luminosidad");
+	glutCreateWindow("Hello World GL");
 	// Asociamos una función de render.
 	//Esta función se mandará a llamar para dibujar un frame.
 	glutDisplayFunc(GameLoop);
@@ -236,7 +298,7 @@ int main(int argc, char* argv[])
 
 	// Configurar OpenGL. Este es el color por default del buffer de color
 	// en el framebuffer.
-	glClearColor(1.0f,1.0f,0.5f,1.0f);
+	glClearColor(1.0f, 1.0f, 0.5f, 1.0f);
 	// Ademas de solicitar el buffer de profundidad, tenemos
 	// que decirle a OpenGL que lo queremos activo
 	glEnable(GL_DEPTH_TEST);

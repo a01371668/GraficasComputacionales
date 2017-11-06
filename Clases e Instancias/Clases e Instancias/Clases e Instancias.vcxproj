@@ -125,6 +125,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +138,7 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +148,11 @@
     <None Include="DiscardCenter.vert" />
     <None Include="Light.frag" />
     <None Include="Light.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="caja.jpg" />
+    <Image Include="cerdito.jpg" />
+    <Image Include="red.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

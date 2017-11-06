@@ -6,110 +6,95 @@
 *	Mesh.cpp
 */
 
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <glm/glm.hpp>
+#include <iostream>
 #include "Mesh.h"
 
-Mesh::Mesh()
-{
+Mesh::Mesh() {
 	_vertexArrayObject = 0;
-	_positionsVertexBufferObject = 0;
-	_colorsVertexBufferObject = 0;
-	_vertexCount = 0;
-	_indiceBufferObject = 0;
-	_indiceContador = 0;
-	_normalVertexBufferObject = 0;
+	GLuint _positionsVertexBufferObject = 0;
+	GLuint _colorsVertexBufferObject = 0;
+	GLuint _normalsVertexBufferObject = 0;
+	GLint _vertexCount = 0;
+	_indicesBufferObject = 0;
+	GLint _indicesCount = 0;
+	GLuint _texCoordsVertexBufferObject = 0;
 }
 
-Mesh::~Mesh()
-{
+Mesh::~Mesh() {
 	glDeleteVertexArrays(1, &_vertexArrayObject);
-	glDeleteBuffers(1, &_colorsVertexBufferObject);
 	glDeleteBuffers(1, &_positionsVertexBufferObject);
-	glDeleteBuffers(1, &_normalVertexBufferObject);
+	glDeleteBuffers(1, &_colorsVertexBufferObject);
+	_vertexCount = 0;
 }
 
-void Mesh::CreateMesh(GLint vertexCount)
-{
+void Mesh::CreateMesh(GLint vertexCount) {
 	_vertexCount = vertexCount;
 	glGenVertexArrays(1, &_vertexArrayObject);
 }
 
-void Mesh::Draw(GLenum primitive)
-{
+void Mesh::Draw(GLenum primitive) {
 	glBindVertexArray(_vertexArrayObject);
-	if (_indiceContador > 0) {
-		glDrawElements(primitive, _indiceContador, GL_UNSIGNED_INT, nullptr);
+	if (_indicesCount == 0) {
+		glDrawArrays(primitive, 0, _vertexCount);
 	}
 	else {
-		glDrawArrays(primitive, 0, _vertexCount); //Sin indices
+		glDrawElements(primitive, _indicesCount, GL_UNSIGNED_INT, nullptr);
 	}
 	glBindVertexArray(0);
 }
 
- void Mesh::SetPositionAttribute(vector<vec2> positions, GLenum usage, GLuint locationIndex)
-{
-	if (!positions.empty() && positions.size() == _vertexCount)
-	{
-		SetAttributeData(_positionsVertexBufferObject, sizeof(vec2) * positions.size(), positions.data(), usage, locationIndex, 2);
+void Mesh::SetPositionAttribute(std::vector<glm::vec3> positions, GLenum usage, GLuint locationIndex) {
+	if (positions.size() > 0 && positions.size() == _vertexCount) {
+		SetAttributeData(_positionsVertexBufferObject, sizeof(glm::vec3) * positions.size(), positions.data(), usage, locationIndex, 3);
 	}
 }
 
-void Mesh::SetPositionAttribute(vector<vec3> positions, GLenum usage, GLuint locationIndex)
-{
-	if (!positions.empty() && positions.size() == _vertexCount)
-	{
-		SetAttributeData(_positionsVertexBufferObject, sizeof(vec3) * positions.size(), positions.data(), usage, locationIndex, 3);
+void Mesh::SetTexCoordAttribute(std::vector<glm::vec2> positions, GLenum usage, GLuint locationIndex) {
+	if (positions.size() > 0 && positions.size() == _vertexCount) {
+		SetAttributeData(_texCoordsVertexBufferObject, sizeof(glm::vec2) * positions.size(), positions.data(), usage, locationIndex, 2);
 	}
 }
 
-void Mesh::SetColorAttribute(vector<vec3> colors, GLenum usage, GLuint locationIndex)
-{
-	if (!colors.empty() && colors.size() == _vertexCount)
-	{
-		SetAttributeData(_colorsVertexBufferObject, sizeof(vec3) * colors.size(), colors.data(), usage, locationIndex, 3);
+void Mesh::SetNormalAttribute(std::vector<glm::vec3> positions, GLenum usage, GLuint locationIndex) {
+	if (positions.size() > 0 && positions.size() == _vertexCount) {
+		SetAttributeData(_normalsVertexBufferObject, sizeof(glm::vec3) * positions.size(), positions.data(), usage, locationIndex, 3);
 	}
 }
 
-void Mesh::SetColorAttribute(vector<vec4> colors, GLenum usage, GLuint locationIndex)
-{
-	if (!colors.empty() && colors.size() == _vertexCount)
-	{
-		SetAttributeData(_colorsVertexBufferObject, sizeof(vec4) * colors.size(), colors.data(), usage, locationIndex, 4);
+void Mesh::SetColorAttribute(std::vector<glm::vec3> colors, GLenum usage, GLuint locationIndex) {
+	if (colors.size() > 0 && colors.size() == _vertexCount) {
+		SetAttributeData(_colorsVertexBufferObject, sizeof(glm::vec3) * colors.size(), colors.data(), usage, locationIndex, 3);
 	}
 }
 
-void Mesh::SetIndice(std::vector<unsigned int> indices, GLenum usage)
-{
-	_indiceContador = indices.size();
-	if (_indiceBufferObject != 0) {
-		_indiceBufferObject = 0;
-	}
+void Mesh::SetIndices(std::vector<unsigned int> indices, GLenum usage) {
+	if (indices.size() == 0)
+		return;
+	_indicesCount = indices.size();
+
+	if (_indicesBufferObject)
+		glDeleteBuffers(1, &_indicesBufferObject);
+
 	glBindVertexArray(_vertexArrayObject);
-	glGenBuffers(1, &_indiceBufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indiceBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*_indiceContador, indices.data(), usage);
+	glGenBuffers(1, &_indicesBufferObject);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indicesBufferObject);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), usage);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
-void Mesh::SetNormalAttribute(std::vector<glm::vec3> normals, GLenum usage, GLuint locationIndex)
-{
-	if (normals.size() > 0 && normals.size() == _vertexCount) {
-		SetAttributeData(_normalVertexBufferObject, sizeof(glm::vec3) * normals.size(), normals.data(), usage, locationIndex, 3);
-	}
-}
-
-void Mesh::SetAttributeData(GLuint & buffer, const GLsizeiptr size, const void * data, GLenum usage, GLuint locationIndex, const GLint components)
-{
-	if (buffer != 0) glDeleteBuffers(1, &buffer);
+void Mesh::SetAttributeData(GLuint & buffer, const GLsizeiptr size, const void * data, GLenum usage, GLuint locationIndex, const GLint components) {
+	if (buffer)
+		glDeleteBuffers(1, &buffer);
 
 	glBindVertexArray(_vertexArrayObject);
+
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 	glEnableVertexAttribArray(locationIndex);
 	glVertexAttribPointer(locationIndex, components, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	glBindVertexArray(0);
 }

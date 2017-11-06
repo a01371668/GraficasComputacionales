@@ -6,37 +6,33 @@
 *	Shader.cpp
 */
 
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <glm/glm.hpp>
 #include "Shader.h"
-#include <vector>
-#include "InputFile.h"
-#include <string>
 
-Shader::Shader()
-{
+Shader::Shader() {
 	_shaderHandle = 0;
 }
 
-Shader::~Shader()
-{
+Shader::~Shader() {
 	glDeleteShader(_shaderHandle);
 }
 
-void Shader::CreateShader(string path, GLenum type)
-{
-	if (_shaderHandle != 0)  _shaderHandle = 0;
+void Shader::CreateShader(std::string path, GLenum type) {
 	InputFile ifile;
-	ifile.Read(path);
-	string vertexShaderSource = ifile.GetContents();
-	const GLchar* vertexShaderSourceC = (const GLchar*)vertexShaderSource.c_str();
+	if (!ifile.Read(path)) return;
+	std::string source = ifile.GetContents();
+
+	if (_shaderHandle)
+		glDeleteShader(_shaderHandle);
+
 	_shaderHandle = glCreateShader(type);
-	glShaderSource(_shaderHandle, 1, &vertexShaderSourceC, nullptr);
+
+	const GLchar *source_c = (const GLchar*)source.c_str();
+	glShaderSource(_shaderHandle, 1, &source_c, nullptr);
+
 	glCompileShader(_shaderHandle);
+
 }
 
-GLuint Shader::GetHandle()
-{
+GLuint Shader::GetHandle() {
 	return _shaderHandle;
 }

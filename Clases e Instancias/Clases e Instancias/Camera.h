@@ -6,30 +6,28 @@
 class Camera {
 public:
 	Camera();
-	
-	glm::mat4 GetViewProjection();
-	glm::mat4 GetViewMatrix(); //Matriz de vista
-	glm::mat4 GetProjectionMatrix(); //Matriz de proyeccion
-	glm::vec3 GetPosition();
+	glm::mat4 getViewProjection();
+	glm::mat4 getViewMatrix();
+	glm::mat4 getProjectionMatrix();
+	glm::vec3 getPosition();
 
-	void SetPosition(float x, float y, float z);
-	void SetRotation(float x, float y, float z);
+	void setPosition(float x, float y, float z);
+	void setRotation(float x, float y, float z);
 
-	void MoveForward(float delta, bool world = false);
-	void MoveUp(float delta, bool world = false);
-	void MoveRight(float delta, bool world = false);
+	void moveForward(float delta, bool world = false);
+	void moveUp(float delta, bool world = false);
+	void moveRight(float delta, bool world = false);
+	void yaw(float degrees);
+	void roll(float degrees);
+	void pitch(float degrees);
+	void rotate(float x, float y, float z, bool world = false);
 
-	void Yaw(float degrees); //Rota la cámara en el eje Y
-	void Roll(float degrees); //Rota la cámara en el eje Z
-	void Pitch(float degrees); //Rota la cámara en el eje X
-	void Rotate(float x, float y, float z, bool world = false);
-
-	void SetPerspective(float nearPlane, float farPlane, float fieldOfView, float aspectRatio);
-	void SetOrthographic(float size, float aspectRatio);
+	void setPerspective(float nearPlane, float farPlane, float fieldOfView, float aspectRation);
+	void setOrthographic(float size, float aspectRatio);
 
 private:
 	Transform _transform;
-	
 	glm::mat4 _viewMatrix;
 	glm::mat4 _projectionMatrix;
+
 };
