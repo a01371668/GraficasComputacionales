@@ -1,7 +1,8 @@
 /*
-*	Autor: Alonso Issac Morales Gutiérrez
-*	Matrícula: A01371668
-*	Fecha: 21/Agosto/2017
+*	Autor1: Francisco Geada	Rodriguez	A01168958
+*	Autor2: Alonso Morales Gutiérrez	A01371668
+*	Gráficas Computacionales
+*	Prof. Oriam De Gyves
 */
 
 #include "InputFile.h"
@@ -12,28 +13,24 @@
 using namespace std;
 
 std::string InputFile::GetContents() {
-	return _contents;
+	return InputFile::_contents;
 }
 
-bool InputFile::Read(std::string filename) {
-	//Abrimos el archivo recibido "filename"
-	ifstream archivo;
-	archivo.open(filename);
+bool InputFile::Read(std::string _fileName) {
+	bool open = false;
+	std::ifstream inputFile;
+	inputFile.open(_fileName);
+	std::string _line;
+	InputFile::_contents = "";
 
-	//Validamos el archivo
-	if (!archivo) {
-		_contents = "";
-		return false; //Como el archivo está vacio regresamos false
-	}
-	else {
-		//variable registro de tipo stringstream es para almacenar lo que contenga el archivo txt
-		string linea;
-		stringstream registro;
-		while (getline(archivo, linea)) { //Obtenemos cada línea del archivo txt
-			registro << linea << "\n";
+	if (inputFile.is_open()) {
+		open = true;
+
+		while (getline(inputFile, _line)) {
+			InputFile::_contents = _contents + _line;
+			InputFile::_contents = _contents + "\n";
 		}
-		_contents = registro.str(); //convertimos lo recibido en variable registro a tipo string
-		archivo.close(); //cerramos el archivo
-		return true; //Como el archivo si contiene datos regresamos true
+		inputFile.close();
 	}
+	return open;
 }

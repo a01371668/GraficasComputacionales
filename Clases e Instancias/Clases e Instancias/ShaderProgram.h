@@ -1,8 +1,8 @@
 /*
-*	Autor: Alonso Issac Morales Gutiérrez
-*	Matrícula: A01371668
+*	Autor1: Francisco Geada	Rodriguez	A01168958
+*	Autor2 : Alonso Morales Gutiérrez	A01371668
 *	Gráficas Computacionales
-*	Prof. Oriam De Gyves
+*	Prof.Oriam De Gyves
 *	ShaderProgram.h
 */
 
@@ -17,7 +17,6 @@
 
 class ShaderProgram {
 public:
-	//Constructores 
 	ShaderProgram();
 	~ShaderProgram();
 	void CreateProgram();
@@ -31,10 +30,10 @@ public:
 	void SetUniformf(std::string name, float x, float y);
 	void SetUniformf(std::string name, float x, float y, float z);
 	void SetUniformf(std::string name, float x, float y, float z, float w);
+	void SetUniformMatrix(std::string name, glm::mat3 matrix);
 	void SetUniformMatrix(std::string name, glm::mat4 matrix);
 
-
-private:		//variables
+private:
 	GLuint _programHandle;
 	std::vector<std::unique_ptr<Shader>> _attachedShaders;
 	void DeleteAndDetachShaders();
