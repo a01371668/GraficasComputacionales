@@ -17,14 +17,18 @@
 #include "Camera.h"
 #include "Texture2D.h"
 #include <IL/il.h>
+#include "DepthBuffer.h"
 
 Mesh _mesh;
 ShaderProgram _shaderProgram;
+ShaderProgram _shaderProgramDepth;
 Transform _transform;
 Transform _transform2;
 Camera _camera;
+Camera _cameraLuz;
 Texture2D _texture;
 Texture2D _texture1;
+DepthBuffer _depthBuffer;
 
 void Initialize() {
 	std::vector<glm::vec3> positions;
@@ -169,6 +173,8 @@ void Initialize() {
 
 	std::vector<glm::vec3> colors;
 
+	_depthBuffer.Create(2048);
+
 	_mesh.SetIndices(indices, GL_STATIC_DRAW);
 	_mesh.CreateMesh(24);
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
@@ -178,47 +184,81 @@ void Initialize() {
 	_mesh.SetTexCoordAttribute(texturas, GL_STATIC_DRAW, 3);
 
 	_shaderProgram.CreateProgram();
-	_shaderProgram.AttachShader("default.vert", GL_VERTEX_SHADER);
-	_shaderProgram.AttachShader("default.frag", GL_FRAGMENT_SHADER);
+	_shaderProgramDepth.CreateProgram();
+	_shaderProgram.AttachShader("Shadow.vert", GL_VERTEX_SHADER);
+	_shaderProgram.AttachShader("Shadow.frag", GL_FRAGMENT_SHADER);
+	_shaderProgramDepth.AttachShader("Depth.frag", GL_FRAGMENT_SHADER);
+	_shaderProgramDepth.AttachShader("Depth.vert", GL_VERTEX_SHADER);
 	_shaderProgram.SetAttribute(0, "VertexPosition");
 	_shaderProgram.SetAttribute(1, "VertexColor");
 	_shaderProgram.SetAttribute(2, "VertexNormal");
 	_shaderProgram.SetAttribute(3, "VertexTexCoord");
+	_shaderProgramDepth.SetAttribute(0, "VertexPosition");
 
 	_shaderProgram.LinkProgram();
+	_shaderProgramDepth.LinkProgram();
 	_camera.MoveForward(25.0f);
+	_cameraLuz.SetOrthigraphic(25.0f, 1);
+	_cameraLuz.SetPosition(0, 13, 0);
+	_cameraLuz.Pitch(-90);
 	_transform2.SetScale(10, 0.5f, 10);
 	_transform2.MoveUp(-10, true);
 
 }
 
 void GameLoop() {
+	_transform.Rotate(0.1f, 0.1f, 0.1f, true);
+	_depthBuffer.Bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_transform.Rotate(0.1f, 0.1f, 0.1f, true);
+	_shaderProgramDepth.Activate();
 
+	_shaderProgramDepth.SetUniformMatrix("mvpMatrix", _cameraLuz.GetViewProjection()* _transform.GetModelMatrix());
+	_mesh.Draw(GL_TRIANGLES);
+	_shaderProgramDepth.SetUniformMatrix("mvpMatrix", _cameraLuz.GetViewProjection()* _transform2.GetModelMatrix());
+	_mesh.Draw(GL_TRIANGLES);
+
+	_depthBuffer.Unbind();
+	glViewport(0, 0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+	_shaderProgramDepth.Deactivate();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_shaderProgram.Activate();
-	_shaderProgram.SetUniformf("pluzx", 0);
-	_shaderProgram.SetUniformf("pluzy", 5);
-	_shaderProgram.SetUniformf("pluzz", 0);
-	_shaderProgram.SetUniformf("pcamarax", _camera.GetPosition ()[0]);
-	_shaderProgram.SetUniformf("pcamaray", _camera.GetPosition()[1]);
-	_shaderProgram.SetUniformf("pcamaraz", _camera.GetPosition()[2]);
+
+	_shaderProgram.SetUniformf("luzX", 0);
+	_shaderProgram.SetUniformf("luzY", 5);
+	_shaderProgram.SetUniformf("luzZ", 0);
+	_shaderProgram.SetUniformf("camaraX", _camera.GetPosition()[0]);
+	_shaderProgram.SetUniformf("camaraY", _camera.GetPosition()[1]);
+	_shaderProgram.SetUniformf("camaraZ", _camera.GetPosition()[2]);
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("ShadowMap", 1);
 
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("ModelMatrix", _transform.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("LightVPMatrix", _cameraLuz.GetViewProjection());
 	glActiveTexture(GL_TEXTURE0);
 	_texture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	_depthBuffer.BindDepthMap();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	_texture.Unbind();
+	glActiveTexture(GL_TEXTURE1);
+	_depthBuffer.UnbindDepthMap();
 
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("ModelMatrix", _transform2.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("LightVPMatrix", _cameraLuz.GetViewProjection());
 	glActiveTexture(GL_TEXTURE0);
 	_texture1.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	_depthBuffer.BindDepthMap();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	_texture1.Unbind();
+	glActiveTexture(GL_TEXTURE1);
+	_depthBuffer.UnbindDepthMap();
 	_shaderProgram.Deactivate();
 
 	glutSwapBuffers();
